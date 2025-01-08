@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import LogoutButton from "@/components/LogoutButton";
 
 type Submission = {
   id: string;
@@ -50,7 +51,10 @@ const AdminDashboard = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
+        <LogoutButton />
+      </div>
       <table className="w-full border">
         <thead>
           <tr>
