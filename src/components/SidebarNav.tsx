@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Icons } from "@/components/Icons";
 import { Link, useLocation } from "react-router-dom";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "@/components/LogoutButton";
 import { Separator } from "@/components/ui/separator";
 
 type NavItem = {

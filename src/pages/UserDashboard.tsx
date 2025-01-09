@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState } from "@/redux/store";
 import {
   Card,
   CardContent,
@@ -90,120 +90,80 @@ const UserDashboard = () => {
     }
   };
 
-  const dashboardConfig = {
-    sidebarNav: [
-      {
-        title: "Dashboard",
-        href: "/dashboard",
-        icon: "dashboard" as keyof typeof Icons,
-      },
-      {
-        title: "Profile",
-        href: "/dashboard/profile",
-        icon: "user" as keyof typeof Icons,
-        disabled: true,
-      },
-    ],
-  };
+  const sidebarNav = [
+    {
+      title: "Dashboard",
+      href: "/dashboard",
+      icon: "dashboard" as keyof typeof Icons,
+    },
+    {
+      title: "Profile",
+      href: "/dashboard/profile",
+      icon: "user" as keyof typeof Icons,
+      disabled: true,
+    },
+  ];
 
   return (
-    <>
-      <div className="flex min-h-screen flex-col space-y-6 pt-16">
-        <div className="grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
-          <aside className="w-[200px] flex-col md:flex pl-8">
-            <SidebarNav items={dashboardConfig.sidebarNav} showLogout={true} />
-          </aside>
-          <main className="flex w-full flex-1 flex-col overflow-hidden">
-            <Card className="w-[350px]">
-              <CardHeader>
-                <CardTitle>User Dashboard</CardTitle>
-                <CardDescription>Submit your KYC document</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {kycStatus === null ? (
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="grid w-full items-center gap-4">
-                      <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="document">Upload a document</Label>
-                        <Input
-                          id="document"
-                          type="file"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              setValue("file", file);
-                            }
-                          }}
-                          className={errors.file ? "border-red-500" : ""}
-                        />
-                        {errors.file?.message && (
-                          <p className="text-red-500 text-sm">
-                            {String(errors.file.message)}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex flex-col space-y-1.5">
-                        <Button
-                          type="submit"
-                          disabled={isLoading}
-                          className="w-full uppercase"
-                        >
-                          {isLoading ? (
-                            <LoaderCircle className="animate-spin" size={16} />
-                          ) : (
-                            "Submit KYC"
-                          )}
-                        </Button>
-                      </div>
+    <div className="flex min-h-screen flex-col space-y-6 pt-16">
+      <div className="grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
+        <aside className="w-[200px] flex-col md:flex pl-8">
+          <SidebarNav items={sidebarNav} showLogout={true} />
+        </aside>
+        <main className="flex w-full flex-1 flex-col overflow-hidden">
+          <Card className="w-[350px]">
+            <CardHeader>
+              <CardTitle>User Dashboard</CardTitle>
+              <CardDescription>Submit your KYC document</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {kycStatus === null ? (
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="grid w-full items-center gap-4">
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="document">Upload a document</Label>
+                      <Input
+                        id="document"
+                        type="file"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setValue("file", file);
+                          }
+                        }}
+                        className={errors.file ? "border-red-500" : ""}
+                      />
+                      {errors.file?.message && (
+                        <p className="text-red-500 text-sm">
+                          {String(errors.file.message)}
+                        </p>
+                      )}
                     </div>
-                  </form>
-                ) : (
-                  <p>
-                    Your KYC status is: <strong>{kycStatus}</strong>
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-          </main>
-        </div>
+                    <div className="flex flex-col space-y-1.5">
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full uppercase"
+                      >
+                        {isLoading ? (
+                          <LoaderCircle className="animate-spin" size={16} />
+                        ) : (
+                          "Submit KYC"
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              ) : (
+                <p>
+                  Your KYC status is: <strong>{kycStatus}</strong>
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </main>
       </div>
-
-      {/* <div className="p-6">
-        <LogoutButton />
-        <Card className="w-[350px]">
-          <CardHeader>
-            <CardTitle>User Dashboard</CardTitle>
-            <CardDescription>Submit your KYC document</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {kycStatus === null ? (
-              <form onSubmit={handleSubmit}>
-                <div className="grid w-full items-center gap-4">
-                  <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="document">Upload a document</Label>
-                    <input
-                      id="document"
-                      type="file"
-                      onChange={(e) => setFile(e.target.files?.[0] || null)}
-                      className="block"
-                    />
-                  </div>
-                  <div className="flex flex-col space-y-1.5">
-                    <Button type="submit" className="w-full uppercase">
-                      Submit KYC
-                    </Button>
-                  </div>
-                </div>
-              </form>
-            ) : (
-              <p>
-                Your KYC status is: <strong>{kycStatus}</strong>
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div> */}
-    </>
+    </div>
   );
 };
 

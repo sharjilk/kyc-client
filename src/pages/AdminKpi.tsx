@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState } from "@/redux/store";
 
 const AdminKpi = () => {
   const { token } = useSelector((state: RootState) => state.auth);

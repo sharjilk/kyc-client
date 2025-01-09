@@ -1,19 +1,58 @@
 import { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+import { RootState } from "@/redux/store";
 import { toast } from "@/hooks/use-toast";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { CircleCheckBig, CircleX } from "lucide-react";
 
 interface Submission {
   _id: string;
   user: { name: string; email: string };
   status: "Pending" | "Approved" | "Rejected";
   documentUrl: string;
+  createdAt: string;
 }
 
 interface ErrorResponse {
   message: string;
 }
+
+const StatusLabel = ({
+  status,
+}: {
+  status: "Pending" | "Approved" | "Rejected";
+}) => {
+  const statusStyles = {
+    Pending: "bg-yellow-100 text-yellow-800",
+    Approved: "bg-green-100 text-green-800",
+    Rejected: "bg-red-100 text-red-800",
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center px-2 py-1 rounded text-sm font-medium ${statusStyles[status]}`}
+    >
+      {status}
+    </span>
+  );
+};
 
 const AdminDashboard = () => {
   const { token } = useSelector((state: RootState) => state.auth);
@@ -65,63 +104,75 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-      </div>
-      <table className="w-full border">
-        <thead>
-          <tr>
-            <th className="border px-4 py-2">Name</th>
-            <th className="border px-4 py-2">Email</th>
-            <th className="border px-4 py-2">Document</th>
-            <th className="border px-4 py-2">Status</th>
-            <th className="border px-4 py-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {submissions.map((submission) => (
-            <tr key={submission._id}>
-              <td className="border px-4 py-2">{submission.user.name}</td>
-              <td className="border px-4 py-2">{submission.user.email}</td>
-              <td className="border px-4 py-2">
-                {submission.documentUrl ? (
-                  <a
-                    href={submission.documentUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 underline"
-                  >
-                    View Document
-                  </a>
-                ) : (
-                  "No Document"
-                )}
-              </td>
-              <td className="border px-4 py-2">{submission.status}</td>
-              <td className="border px-4 py-2 space-x-2">
-                {submission.status === "Pending" && (
-                  <>
-                    <button
-                      className="bg-green-500 text-white py-1 px-2"
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Admin Dashboard</CardTitle>
+        <CardDescription>View and approve all KYC submissions.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableCaption>A list of your recent KYC submissions.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Document</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Submission Date</TableHead>
+              <TableHead className="text-right">&nbsp;</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {submissions.map((submission) => (
+              <TableRow key={submission._id}>
+                <TableCell>{submission.user.name}</TableCell>
+                <TableCell>{submission.user.email}</TableCell>
+                <TableCell>
+                  {submission.documentUrl ? (
+                    <a
+                      href={submission.documentUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      View Document
+                    </a>
+                  ) : (
+                    "No Document"
+                  )}
+                </TableCell>
+                <TableCell>
+                  <StatusLabel status={submission.status} />
+                </TableCell>
+                <TableCell>
+                  {new Date(submission.createdAt).toLocaleString()}
+                </TableCell>
+                <TableCell>
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      variant={"outline"}
+                      size={"sm"}
+                      disabled={submission.status !== "Pending"}
                       onClick={() => handleAction(submission._id, "Approved")}
                     >
-                      Approve
-                    </button>
-                    <button
-                      className="bg-red-500 text-white py-1 px-2"
+                      <CircleCheckBig /> Approve
+                    </Button>
+                    <Button
+                      variant={"destructive"}
+                      size={"sm"}
+                      disabled={submission.status !== "Pending"}
                       onClick={() => handleAction(submission._id, "Rejected")}
                     >
-                      Reject
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                      <CircleX /> Reject
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 };
 

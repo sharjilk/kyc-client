@@ -1,44 +1,34 @@
-import LogoutButton from "@/components/LogoutButton";
+import { Icons } from "@/components/Icons";
+import SidebarNav from "@/components/SidebarNav";
+import { Toaster } from "@/components/ui/toaster";
 import { Outlet } from "react-router-dom";
-import { Link, useLocation } from "react-router-dom";
 
 const AdminLayout = () => {
-  const location = useLocation();
-
-  const menuItems = [
-    { name: "Dashboard", path: "/admin/dashboard" },
-    { name: "KPI", path: "/admin/kpi" },
+  const sidebarNav = [
+    {
+      title: "Dashboard",
+      href: "/admin/dashboard",
+      icon: "dashboard" as keyof typeof Icons,
+    },
+    {
+      title: "KPI report",
+      href: "/admin/kpi",
+      icon: "report" as keyof typeof Icons,
+    },
   ];
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar */}
-      <nav className="w-64 bg-gray-800 text-white">
-        <div className="p-4 text-lg font-bold">Admin Panel</div>
-        <ul className="space-y-2">
-          {menuItems.map((item) => (
-            <li key={item.path}>
-              <Link
-                to={item.path}
-                className={`block px-4 py-2 ${
-                  location.pathname === item.path
-                    ? "bg-gray-700"
-                    : "hover:bg-gray-700"
-                }`}
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
-          <li>
-            <LogoutButton />
-          </li>
-        </ul>
-      </nav>
-
-      {/* Main Content */}
-      <div className="flex-1 p-6 bg-gray-100 overflow-auto">
-        <Outlet />
+    <div className="bg-slate-100">
+      <div className="flex min-h-screen flex-col space-y-6 pt-16">
+        <div className="grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
+          <aside className="w-[200px] flex-col md:flex pl-8">
+            <SidebarNav items={sidebarNav} showLogout={true} />
+          </aside>
+          <main className="flex w-full flex-1 flex-col md:pr-8 overflow-hidden">
+            <Outlet />
+          </main>
+        </div>
+        <Toaster />
       </div>
     </div>
   );
