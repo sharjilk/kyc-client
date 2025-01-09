@@ -72,12 +72,15 @@ body,
   }
 }
 
-.login-background {
-  background: linear-gradient(
-    68.8deg,
-    rgba(0, 0, 0, 0.95) 1.8%,
-    rgb(0, 55, 79) 31.8%,
-    rgb(9, 93, 134) 56.2%,
-    rgb(15, 155, 217) 89%
-  );
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: #4f46e5;
+  height: 4px;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #4f46e5, 0 0 5px #4f46e5;
 }

@@ -147,15 +147,14 @@ const RegisterForm = () => {
       </CardContent>
       <CardFooter className="flex flex-col justify-between">
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        <p className="px-8 mt-4 text-center text-lg">
-          Already have an account? <br />
-          <Link
-            to="/login"
-            className="underline underline-offset-4 hover:text-primary"
-          >
-            Sign In
-          </Link>
+        <p className="px-8 mt-4 mb-4 text-center text-lg">
+          Already have an account?
         </p>
+        <Link to="/login" className="w-full">
+          <Button variant="outline" className="bg-gray-200 uppercase w-full">
+            Sign In
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

@@ -4,6 +4,7 @@ import Layout from "@/layout/Layout";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import GuestRoute from "@/components/GuestRoute";
 import AdminLayout from "./layout/AdminLayout";
+import { ProgressHandler } from "./lib/nprogress-handler";
 
 const LoginPage = React.lazy(() => import("@/pages/Login"));
 const RegisterPage = React.lazy(() => import("@/pages/Register"));
@@ -15,6 +16,7 @@ const App = () => {
   return (
     <>
       <Router>
+        <ProgressHandler />
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
             <Route element={<Layout />}>

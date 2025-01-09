@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useCallback, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
+import DOMPurify from "dompurify";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { loginSchema, LoginFormValues } from "@/validation/loginValidation";
+import { LoaderCircle } from "lucide-react";
 
 interface ErrorResponse {
   message: string;
@@ -22,36 +28,56 @@ interface ErrorResponse {
 
 const LoginForm = () => {
   const { toast } = useToast();
-
-  const [formData, setFormData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_HOST}/api/auth/login`,
-        formData
-      );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
 
-      if (response.data.success) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = useCallback(
+    async (data: LoginFormValues) => {
+      setIsLoading(true);
+
+      const sanitizedData = {
+        email: DOMPurify.sanitize(data.email),
+        password: DOMPurify.sanitize(data.password),
+      };
+
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_HOST}/api/auth/login`,
+          sanitizedData
+        );
+
+        if (response.data.success) {
+          toast({
+            title: response.data.message,
+          });
+          const { token, user } = response.data.data;
+
+          dispatch(setAuth({ token, user }));
+          navigate(user.role === "Admin" ? "/admin/dashboard" : "/dashboard");
+        }
+      } catch (error) {
+        const axiosError = error as AxiosError;
+        console.log((axiosError.response?.data as ErrorResponse).message);
         toast({
-          title: response.data.message,
+          title: "Invalid login credentials",
+          description: "Try again",
         });
-        const { token, user } = response.data.data;
-
-        dispatch(setAuth({ token, user }));
-        navigate(user.role === "Admin" ? "/admin/dashboard" : "/dashboard");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      toast({
-        title: (axiosError.response?.data as ErrorResponse).message,
-        description: "Try again",
-      });
-    }
-  };
+    },
+    [dispatch, navigate, toast]
+  );
 
   return (
     <Card className="w-[350px]">
@@ -59,48 +85,61 @@ const LoginForm = () => {
         <CardTitle>Log In to your account</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="text"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                {...register("email")}
+                className={errors.email ? "border-red-500" : ""}
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
             </div>
+
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                {...register("password")}
+                className={errors.password ? "border-red-500" : ""}
               />
+              {errors.password && (
+                <p className="text-red-500 text-sm">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
             <div className="flex flex-col space-y-1.5">
-              <Button type="submit" className="w-full uppercase">
-                Log In
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full uppercase"
+              >
+                {isLoading ? (
+                  <LoaderCircle className="animate-spin" size={16} />
+                ) : (
+                  "Log In"
+                )}
               </Button>
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex flex-col justify-between">
-        <p className="px-8 mt-4 text-center text-lg">
-          Don't have an account? <br />
-          <Link
-            to="/"
-            className="underline underline-offset-4 hover:text-primary"
-          >
-            Sign Up
-          </Link>
+        <Separator />
+        <p className="px-8 mt-4 mb-4 text-center text-lg">
+          Don't have an account?
         </p>
+        <Link to="/" className="w-full">
+          <Button variant="outline" className="bg-gray-200 uppercase w-full">
+            Sign Up
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
