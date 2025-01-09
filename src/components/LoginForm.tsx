@@ -20,7 +20,7 @@ import DOMPurify from "dompurify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { loginSchema, LoginFormValues } from "@/validation/loginValidation";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, Eye, EyeOff } from "lucide-react";
 
 interface ErrorResponse {
   message: string;
@@ -31,6 +31,11 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+
   const {
     register,
     handleSubmit,
@@ -38,8 +43,6 @@ const LoginForm = () => {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = useCallback(
     async (data: LoginFormValues) => {
@@ -102,12 +105,21 @@ const LoginForm = () => {
 
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                {...register("password")}
-                className={errors.password ? "border-red-500" : ""}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  {...register("password")}
+                  className={errors.password ? "border-red-500" : ""}
+                />
+                <button
+                  type="button"
+                  className="absolute right-2 top-2 text-gray-500"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-red-500 text-sm">
                   {errors.password.message}

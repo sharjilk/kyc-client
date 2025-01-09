@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Register = () => {
   return (
-    <div className="mx-auto flex w-full h-screen flex-col content-center justify-center space-y-6 sm:w-[350px]">
+    <div className="mx-auto flex w-full min-h-screen flex-col content-center justify-center space-y-6 sm:w-[350px] pt-8">
       <RegisterForm />
       <p className="px-8 text-center text-sm text-muted-foreground pb-6">
         By logging in, you agree to our <br />
