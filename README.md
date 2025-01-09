@@ -1,50 +1,91 @@
-# React + TypeScript + Vite
+# KYC app on React.JS 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Project Overview
 
-Currently, two official plugins are available:
+The app is built using a **React (Vite)** frontend and a **Node.js (Express.js)** backend.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### **Demo URL**
+- **Frontend Production (Vercel)**: https://kyc-client-beryl.vercel.app/  
+- **Backend Production (Render)**: https://kyc-backend-vbvo.onrender.com/
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🛠️ Tech Stack
 
-- Configure the top-level `parserOptions` property like this:
+### **Frontend:**
+- **React.js**
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling and responsiveness
+- **Redux** for global state management
+- **Deployed on Vercel**
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### **Backend:**
+- **Node.js** with **Express.js** for API handling
+- **TypeScript** for backend logic
+- **Express-Validator** for request validation
+- **Deployed on Render**
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## 🔍 Frontend Features
+- **Register page (`/`)**: For user registeration
+- **Login Page (`/login`)**: For user log in.
+- **Dashboard Page**: To view and submit KYC document.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+---
+
+## 🔗 API Documentation
+
+### **KYC API**
+
+| Method | Endpoint            | Description                                     | Request Body                  | Response                                                                  |
+|--------|---------------------|-------------------------------------------------|--------------------------------|---------------------------------------------------------------------------|
+| `GET`  | `/api/auth/register`       | For user registration       | `name, email, password, role`                         | `201 OK` - Returns registered user                            |
+| `GET`  | `/api/auth/login`   | For user login              | `email, password`                         | `200 OK` - Returns JWT token |
+| `GET`  | `/api/kyc/submit`   | For KYC submission              | `file`                         | `201 OK` - Returns document url |
+| `GET`  | `/api/kyc/:id`   | For admin to approve KYC              | `status`                         | `200 OK` - Returns updated status |
+| `GET`  | `/api/kyc/status`   | For user to check their kyc status              | `none`                         | `200 OK` - Returns Kyc status |
+| `GET`  | `/api/kyc/submissions`   | For admin to view all submissions          | `none`                         | `200 OK` - Returns list of kyc submissions |
+| `GET`  | `/api/kyc/kpi`   | For admin to view kyc's kpi              | `none`                         | `200 OK` - Returns no of items as KPIs |
+
+---
+
+## 🖥️ Running Locally
+
+### **Prerequisites**
+- Latest LTS version of Node.js and npm should be installed
+
+---
+
+### **Backend Setup**
+1. Clone the repository
+   ```bash
+   git clone git@github.com/sharjilk/kyc-backend
+   cd backend
+   ```
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+3. Run the backend
+   ```bash
+   npm run start
+   ```
+4. Backend runs on `http://localhost:3000/`
+
+---
+
+### **Frontend Setup**
+1. Navigate to the frontend directory:
+   ```bash
+   git clone git@github.com/sharjilk/kyc-client
+   ```
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+3. Start the development server
+   ```bash
+   npm run dev
+   ```
+4. Frontend runs on `http://localhost:5173/`
