@@ -33,12 +33,24 @@ const AdminKpi = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Admin KPI</h1>
-      <ul>
-        <li>Total Users: {stats.totalUsers}</li>
-        <li>Approved KYC: {stats.approved}</li>
-        <li>Rejected KYC: {stats.rejected}</li>
-        <li>Pending KYC: {stats.pending}</li>
-      </ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-blue-100 p-4 rounded shadow">
+          <h2 className="text-lg font-semibold">Total Users</h2>
+          <p className="text-2xl font-bold">{stats.totalUsers}</p>
+        </div>
+        <div className="bg-green-100 p-4 rounded shadow">
+          <h2 className="text-lg font-semibold">Approved KYC</h2>
+          <p className="text-2xl font-bold">{stats.approved}</p>
+        </div>
+        <div className="bg-red-100 p-4 rounded shadow">
+          <h2 className="text-lg font-semibold">Rejected KYC</h2>
+          <p className="text-2xl font-bold">{stats.rejected}</p>
+        </div>
+        <div className="bg-yellow-100 p-4 rounded shadow">
+          <h2 className="text-lg font-semibold">Pending KYC</h2>
+          <p className="text-2xl font-bold">{stats.pending}</p>
+        </div>
+      </div>
     </div>
   );
 };

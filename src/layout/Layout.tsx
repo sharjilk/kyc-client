@@ -1,16 +1,10 @@
-import React from "react";
-//import Header from "../components/Header";
 import { Toaster } from "@/components/ui/toaster";
+import { Outlet } from "react-router-dom";
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout = () => {
   return (
     <>
-      {/* <Header /> */}
-      {children}
+      <Outlet />
       <Toaster />
     </>
   );

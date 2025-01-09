@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Layout from "@/layout/Layout";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import GuestRoute from "@/components/GuestRoute";
+import AdminLayout from "./layout/AdminLayout";
 
 const LoginPage = React.lazy(() => import("@/pages/Login"));
 const RegisterPage = React.lazy(() => import("@/pages/Register"));
@@ -14,9 +15,9 @@ const App = () => {
   return (
     <>
       <Router>
-        <Layout>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Routes>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route element={<Layout />}>
               <Route
                 path="/"
                 element={
@@ -41,6 +42,9 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
+            </Route>
+
+            <Route element={<AdminLayout />}>
               <Route
                 path="/admin/dashboard"
                 element={
@@ -57,9 +61,9 @@ const App = () => {
                   </ProtectedRoute>
                 }
               />
-            </Routes>
-          </Suspense>
-        </Layout>
+            </Route>
+          </Routes>
+        </Suspense>
       </Router>
     </>
   );
